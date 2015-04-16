@@ -7,6 +7,10 @@ The App360SDK Unity Plugin helps provides a way to integrate with Unity project 
 
 The plugin contains a .unitypackage file for those that want to easily import the plugin, as well as the source code for those that want to iterate on it.
 
+## Downloads
+
+Please check out our [releases](https://github.com/app360/app360-unity-plugin/releases) for the latest downloads for the different sample apps.
+
 ## Requirements
 
 - Unity 4.5
