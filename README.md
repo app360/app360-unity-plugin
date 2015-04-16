@@ -28,6 +28,10 @@ Please check out our [releases](https://github.com/app360/app360-unity-plugin/re
 3. Select the **App360SDK.unitypackage** file.
 4. Import all of the files for the plugins by selecting Import. Make sure to check for any conflicts with files.
 
+![Imgur](http://i.imgur.com/GOFkUqt.png)
+
+![Imgur](http://i.imgur.com/7JL2FNs.png)
+
 ## Android Setup
 
 1. Add the `google-play-services_lib` folder, located at `ANDROID_SDK_LOCATION/extras/google/google_play_services/libproject`, into the `Plugins/Android` folder of your project.
