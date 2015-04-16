@@ -59,4 +59,4 @@ To build and run on iOS, click **File -> Build Settings**, select the iOS platfo
 2. From the Xcode project navigator, right-click on the project, and choose Add Files To "".
 3. Navigate to and select MOG.bundle
 
-If these steps didn't work, [the developer docs](https://github.com/app360/app360-ios-sdk) always has the most up-to-date information on how to reference the Google Mobile Ads iOS library.
+If these steps didn't work, [the developer docs](https://docs.app360.vn/) always has the most up-to-date information on how to reference the Google Mobile Ads iOS library.
