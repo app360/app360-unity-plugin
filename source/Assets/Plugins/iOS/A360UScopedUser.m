@@ -8,6 +8,11 @@
 
 #import "A360UScopedUser.h"
 #import <App360SDK/App360SDK.h>
+#import "NSDictionary+JSON.h"
+
+NSString * const kScopedId = @"scoped_id";
+NSString * const kChannel = @"channel";
+NSString * const kSubChannel = @"sub_channel";
 
 @implementation A360UScopedUser
 
@@ -61,6 +66,13 @@
     [[MOGScopedUser getCurrentUser] unlinkGoogleInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
     }];
+}
+
+- (NSString *)getCurrentUser
+{
+    MOGScopedUser *user = [MOGScopedUser getCurrentUser];
+    NSDictionary *userData = @{kScopedId: user.scopedId, kChannel: user.channel, kSubChannel: user.subChannel};
+    return [userData toJSONString];
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "A360USMSRequest.h"
 #import "A360UCardRequest.h"
 #import "A360UBankRequest.h"
+#import "A360UStatusRequest.h"
 #import "A360UTypes.h"
 
 static NSString * NSStringFromUTF8String(const char *bytes)
@@ -161,6 +162,12 @@ void unlinkGoogle(A360UTypeScopedUserRef scopedUser)
     [user unLinkWithGoogle];
 }
 
+const char * getCurrentUser(A360UTypeScopedUserRef scopedUser)
+{
+    A360UScopedUser *user = (__bridge A360UScopedUser *)scopedUser;
+    return MakeStringCopy([[user getCurrentUser] UTF8String]);
+}
+
 #pragma mark - SMSRequest
 
 A360UTypeSMSRequestRef createSMSRequestObject(A360UTypeSMSRequestClientRef *client)
@@ -214,10 +221,10 @@ void requestCardTransaction(A360UTypeCardRequestRef request, const char *vendor,
 
 A360UTypeBankRequestRef createBankRequestObject(A360UTypeBankRequestClientRef *client)
 {
-    A360USMSRequest *request = [[A360USMSRequest alloc] initWithClient:client];
+    A360UBankRequest *request = [[A360UBankRequest alloc] initWithClient:client];
     A360UObjectCache *cache = [A360UObjectCache sharedInstance];
     [cache.references setObject:request forKey:[request a360u_referenceKey]];
-    return (__bridge A360UTypeSMSRequestRef)request;
+    return (__bridge A360UTypeBankRequestRef)request;
 }
 
 void setBankRequestCallback(A360UTypeBankRequestRef request, A360BankRequestSuccess onSuccess, A360BankRequestFailure onFailure)
@@ -231,6 +238,29 @@ void requestBankTransaction(A360UTypeBankRequestRef request, int amount, const c
 {
     A360UBankRequest *bankRequest = (__bridge A360UBankRequest *)request;
     [bankRequest requestTransactionWithAmount:amount payload:NSStringFromUTF8String(payload)];
+}
+
+#pragma mark - StatusRequest
+
+A360UTypeStatusRequestRef createStatusRequestObject(A360UTypeStatusRequestClientRef *client)
+{
+    A360UStatusRequest *request = [[A360UStatusRequest alloc] initWithClient:client];
+    A360UObjectCache *cache = [A360UObjectCache sharedInstance];
+    [cache.references setObject:request forKey:[request a360u_referenceKey]];
+    return (__bridge A360UTypeSMSRequestRef)request;
+}
+
+void setStatusRequestCallback(A360UTypeBankRequestRef request, A360BankRequestSuccess onSuccess, A360BankRequestFailure onFailure)
+{
+    A360UBankRequest *bankRequest = (__bridge A360UBankRequest *)request;
+    bankRequest.successCallback = onSuccess;
+    bankRequest.failureCallback = onFailure;
+}
+
+void requestStatusTransaction(A360UTypeStatusRequestRef request, const char *transactionId)
+{
+    A360UStatusRequest *bankRequest = (__bridge A360UStatusRequest *)request;
+    [bankRequest requestTransactionId:NSStringFromUTF8String(transactionId)];
 }
 
 #pragma mard - Common

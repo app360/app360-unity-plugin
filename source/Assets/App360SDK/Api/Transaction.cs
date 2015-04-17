@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using SimpleJSON;
 namespace App360SDK.Api
 {
 	public enum TransactionStatus
@@ -13,6 +13,34 @@ namespace App360SDK.Api
 
 	public class Transaction
 	{
+		public Transaction()
+		{
+		}
+		public Transaction(string json){
+			var jTransaction = JSON.Parse (json);
+			// base
+			payload = jTransaction ["payload"].Value;
+			switch (jTransaction ["status"].Value) {
+			case "begin":
+				status = TransactionStatus.BEGIN;
+				break;
+			case "completed":
+				status = TransactionStatus.COMPLETED;
+				break;
+			case "failed":
+				status = TransactionStatus.FAILED;
+				break;
+			case "pending":
+				status = TransactionStatus.PENDING;
+				break;
+			default:
+				break;
+			}
+			
+			transactionId = jTransaction ["transaction_id"].Value;
+			
+
+		}
 		protected string payload;
 		protected TransactionStatus status;
 		protected string transactionId;

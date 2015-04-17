@@ -8,6 +8,8 @@
 
 #import "A360USMSRequest.h"
 #import <App360SDK/App360SDK.h>
+#import "A360UConstants.h"
+#import "NSDictionary+JSON.h"
 
 @implementation A360USMSRequest
 
@@ -24,7 +26,61 @@
 {
     MOGSMSAmount smsAmount = [A360USMSRequest amountFromString:amount];
     [MOGPaymentSDK getSMSSyntaxWithSMSAmount:smsAmount payload:payload block:^(MOGSMSResponseObject *responseObject, NSError *error) {
-        //TODO: Call callback method
+        
+        if (error) {
+            if (self.failureCallback) {
+                self.failureCallback(self.client, [error.description UTF8String]);
+            }
+        } else {
+            
+            if (!self.successCallback) {
+                return;
+            }
+            
+            NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
+            [json setObject:responseObject.payload forKey:kPayload];
+            [json setObject:responseObject.transactionId forKey:kTransactionId];
+            NSString *status = nil;
+            switch (responseObject.status) {
+                case MOGTransactionStatusBegin:
+                    status = kStatusBegin;
+                    break;
+                case MOGTransactionStatusCompleted:
+                    status = kStatusCompleted;
+                    break;
+                case MOGTransactionStatusFailed:
+                    status = kStatusFailed;
+                    break;
+                case MOGTransactionStatusPending:
+                    status = kStatusPending;
+                    break;
+                default:
+                    status = kStatusBegin;
+                    break;
+            }
+            [json setObject:status forKey:kStatus];
+            NSMutableArray *services = [[NSMutableArray alloc] initWithCapacity:responseObject.services.count];
+            for (MOGSMSItem *item in responseObject.services) {
+                NSDictionary *smsitem = [[NSDictionary alloc] initWithObjectsAndKeys:item.recipient, kTo, item.amount, kAmount, nil];
+                [services addObject:smsitem];
+            }
+            [json setObject:services forKey:kServices];
+            [json setObject:kTypeSMS forKey:kType];
+            [json setObject:responseObject.syntax forKey:kSyntax];
+            [json setObject:responseObject.details[kAmount] forKey:kAmount];
+            
+            NSString *command = responseObject.details[kCommand];
+            if (command) {
+                NSString *ott = responseObject.details[kOTT];
+                [json setObject:[NSString stringWithFormat:@"%@ %@", command, ott] forKey:kSyntax];
+                
+                NSString *recipient = responseObject.details[kShortCode];
+                [json setObject:recipient forKey:kRecipient];
+            }
+            
+            
+            self.successCallback(self.client, [[(NSDictionary *)json toJSONString] UTF8String]);
+        }
     }];
 }
 

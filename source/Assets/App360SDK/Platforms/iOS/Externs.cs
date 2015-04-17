@@ -163,5 +163,23 @@ namespace App360SDK.iOS
 			string payload);
 		
 		#endregion
+
+		#region StatusRequest
+		
+		[DllImport("__Internal")]
+		internal static extern IntPtr createStatusRequestObject (IntPtr client);
+		
+		[DllImport("__Internal")]
+		internal static extern void setStatusRequestCallback (
+			IntPtr wrapper,
+			IOSStatusRequestClient.A360StatusRequestSuccess successCallback,
+			IOSStatusRequestClient.A360StatusRequestFailure failureCallback);
+		
+		[DllImport("__Internal")]
+		internal static extern void requestStatusTransaction (
+			IntPtr wrapper,
+			string transactionId);
+		
+		#endregion
 	}
 }

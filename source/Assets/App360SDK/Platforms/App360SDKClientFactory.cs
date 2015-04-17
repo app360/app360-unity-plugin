@@ -6,13 +6,21 @@ namespace App360SDK
 {
 	internal class App360SDKClientFactory
 	{
+		internal static IStatusRequestClient getCheckTransationRequest (IStatusRequestListener listener)
+		{
+			#if UNITY_IOS
+			return null;
+			#elif UNITY_ANDROID
+			return new App360SDK.Android.AndroidCheckTransactionRequestClient(listener);	
+			#endif
+		}
+
 		internal static IBankRequestClient getBankRequest (IBankRequestListener listener)
 		{
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSBankRequestClient(listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidBankRequestClient(listener);			
-
+			return new App360SDK.Android.AndroidBankRequestClient(listener);
 			#endif
 		}
 
@@ -21,7 +29,9 @@ namespace App360SDK
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSSMSRequestClient(listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidSMSRequestClient(listener);	
+			return new App360SDK.Android.AndroidSMSRequestClient(listener);			
+			#elif UNITY_EDITOR
+			return null;
 			#endif
 		}
 
@@ -30,7 +40,9 @@ namespace App360SDK
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSCardRequestClient(listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidCardRequestClient(listener);
+			return new App360SDK.Android.AndroidCardRequestClient(listener);		
+			#elif UNITY_EDITOR
+			return null;
 			#endif
 		}
 
@@ -39,7 +51,9 @@ namespace App360SDK
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSApp360SDKClient(listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidApp360SDKClient(listener);
+			return new App360SDK.Android.AndroidApp360SDKClient(listener);		
+			#elif UNITY_EDITOR
+			return null;
 			#endif 
 		}
 
@@ -48,7 +62,9 @@ namespace App360SDK
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSSessionManagerClient (listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidSessionManagerClient(listener);
+			return new App360SDK.Android.AndroidSessionManagerClient(listener);		
+			#elif UNITY_EDITOR
+			return null;
 			#endif
 		}
 
@@ -57,7 +73,9 @@ namespace App360SDK
 			#if UNITY_IOS
 			return new App360SDK.iOS.IOSScopedUserClient (listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidScopedUserClient(listener);
+			return new App360SDK.Android.AndroidScopedUserClient(listener);		
+			#elif UNITY_EDITOR
+			return null;
 			#endif
 		}
 	}

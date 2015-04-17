@@ -12,15 +12,18 @@ import vn.mog.app360.sdk.payment.BankRequest;
 import vn.mog.app360.sdk.payment.CardRequest;
 import vn.mog.app360.sdk.payment.PaymentForm;
 import vn.mog.app360.sdk.payment.SmsRequest;
+import vn.mog.app360.sdk.payment.StatusRequest;
 import vn.mog.app360.sdk.payment.data.BankTransaction;
 import vn.mog.app360.sdk.payment.data.CardTransaction;
 import vn.mog.app360.sdk.payment.data.SmsTransaction;
+import vn.mog.app360.sdk.payment.data.Transaction;
 import vn.mog.app360.sdk.payment.data.CardTransaction.CardVendor;
 import vn.mog.app360.sdk.payment.data.SmsTransaction.SmsService;
 import vn.mog.app360.sdk.payment.data.TransactionStatus;
 import vn.mog.app360.sdk.payment.interfaces.BankRequestListener;
 import vn.mog.app360.sdk.payment.interfaces.CardRequestListener;
 import vn.mog.app360.sdk.payment.interfaces.SmsRequestListener;
+import vn.mog.app360.sdk.payment.interfaces.StatusRequestListener;
 import vn.mog.app360.sdk.payment.utils.Const;
 import vn.mog.app360.sdk.scopedid.Profile;
 import vn.mog.app360.sdk.scopedid.SaveCallback;
@@ -229,7 +232,8 @@ public class App360SDKWrapper extends UnityPlayerActivity {
 		CardRequest cardRequest = new CardRequest.Builder()
 				.setCardCode(cardCode).setCardSerial(cardSerial)
 				.setCardVendor(CardVendor.parseString(vendor))
-				.setPayload(payload).setListener(new CardRequestListener() {
+				.setPayload(payload)
+				.setListener(new CardRequestListener() {
 
 					@Override
 					public void onSuccess(CardTransaction card) {
@@ -274,7 +278,7 @@ public class App360SDKWrapper extends UnityPlayerActivity {
 					public void onSuccess(SmsTransaction sms) {
 						Log.d("WRAPPER","sms onSuccess");
 						JsonObject jobj = new JsonObject();
-
+						Log.d(TAG + "Jar", "sms request " +  sms.getPayload());
 						jobj.addProperty("payload", sms.getPayload());
 						jobj.addProperty("status", sms.getStatus().name());
 						jobj.addProperty("transaction_id",
@@ -313,12 +317,13 @@ public class App360SDKWrapper extends UnityPlayerActivity {
 			IBankRequestListener listener) {
 		bank_listener = listener;
 		BankRequest bankRequest = new BankRequest.Builder().setAmount(amount)
-				.setPayload(payload).setListener(new BankRequestListener() {
+				.setPayload(payload)
+				.setListener(new BankRequestListener() {
 
 					@Override
 					public void onSuccess(BankTransaction bank) {
 						JsonObject jobj = new JsonObject();
-
+						Log.d(TAG + "Jar", "bank request " +  bank.getPayload());
 						jobj.addProperty("payload", bank.getPayload());
 						jobj.addProperty("status", bank.getStatus().name());
 						jobj.addProperty("transaction_id",
@@ -336,5 +341,32 @@ public class App360SDKWrapper extends UnityPlayerActivity {
 					}
 				}).build();
 		bankRequest.execute();
+	}
+	
+	static ICheckTransactionRequestListener check_transaction_listener;
+	public static void checkTransactionStatus(String transactionId, ICheckTransactionRequestListener listener){
+		check_transaction_listener=listener;
+		StatusRequest statusRequest = new StatusRequest.Builder()
+        .setListener(new StatusRequestListener() {
+			
+			@Override
+			public void onFinish(Transaction status) {
+				JsonObject jobj = new JsonObject();
+				Log.d(TAG + "Jar", "status transaction: " +  status.getPayload());
+				jobj.addProperty("payload", status.getPayload());
+				jobj.addProperty("status", status.getStatus().name());
+				jobj.addProperty("transaction_id",	status.getTransactionId());
+				check_transaction_listener.onSuccess(jobj.toString());
+			}
+			
+			@Override
+			public void onError(Throwable error) {
+				check_transaction_listener.onFailure(error.getMessage());
+				
+			}
+		})
+        .setTransactionId(transactionId)
+        .build();
+		statusRequest.execute();
 	}
 }

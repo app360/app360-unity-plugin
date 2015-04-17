@@ -33,4 +33,6 @@
 
 - (void)unLinkWithGoogle;
 
+- (NSString *)getCurrentUser;
+
 @end

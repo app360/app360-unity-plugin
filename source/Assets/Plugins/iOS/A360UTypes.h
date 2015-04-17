@@ -81,3 +81,16 @@ typedef const void *A360UTypeBankRequestRef;
 typedef void (*A360BankRequestSuccess)(A360UTypeBankRequestClientRef *client, const char *transactionData);
 
 typedef void (*A360BankRequestFailure)(A360UTypeBankRequestClientRef *client, const char *error);
+
+
+/**
+ *  StatusRequest wrapper
+ */
+
+typedef const void *A360UTypeStatusRequestClientRef;
+
+typedef const void *A360UTypeStatusRequestRef;
+
+typedef void (*A360StatusRequestSuccess)(A360UTypeStatusRequestClientRef *client, const char *transactionData);
+
+typedef void (*A360StatusRequestFailure)(A360UTypeStatusRequestClientRef *client, const char *error);

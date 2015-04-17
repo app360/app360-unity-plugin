@@ -1,5 +1,3 @@
-#if UNITY_ANDROID
-
 using System;
 
 namespace App360SDK.Android
@@ -15,11 +13,10 @@ namespace App360SDK.Android
 		public const string BANK_LISTENER_CLASSNAME = "com.example.app360wrapper.IBankRequestListener";
 		public const string SMS_LISTENER_CLASSNAME = "com.example.app360wrapper.ISMSRequestListener";
 		public const string CARD_LISTENER_CLASSNAME = "com.example.app360wrapper.ICardRequestListener";
+		public const string CHECK_TRANSACTION_LISTENER_CLASSNAME = "com.example.app360wrapper.ICheckTransactionRequestListener";
 
 		// JAVA classes
 		public const string APP360_WRAPPER_CLASSNAME = "com.example.app360wrapper.App360SDKWrapper";
 		public const string UnityActivityClassName = "com.unity3d.player.UnityPlayer";
 	}
 }
-
-#endif
