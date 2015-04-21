@@ -9,9 +9,9 @@ namespace App360SDK
 		internal static IStatusRequestClient getCheckTransationRequest (IStatusRequestListener listener)
 		{
 			#if UNITY_IOS
-			return null;
+			return new App360SDK.iOS.IOSStatusRequestClient(listener);
 			#elif UNITY_ANDROID
-			return new App360SDK.Android.AndroidCheckTransactionRequestClient(listener);	
+			return new App360SDK.Android.AndroidStatusRequestClient(listener);	
 			#endif
 		}
 
