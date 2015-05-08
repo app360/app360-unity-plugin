@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using App360SDK.Common;
 using System;
@@ -7,66 +7,106 @@ namespace App360SDK.Api
 {
 	public class ScopedUser : IScopedUserListener
 	{
-
 		private IScopedUserClient client;
 
 		public event EventHandler<EventArgs> onUpdateUserSuccess = delegate {};
-		public event EventHandler<EventArgs> onUpdateUserFailure = delegate {};
+		public event EventHandler<App360ErrorEventArgs> onUpdateUserFailure = delegate {};
 
-		public static ScopedUser getCurrentUser()
+		public static ScopedUser getCurrentUser ()
 		{
-			IScopedUserClient mClient = App360SDKClientFactory.getScopedUserClient (null);
-			return mClient.getCurrentUser ();
+			ScopedUser scopeUser = new ScopedUser ();
+			return  scopeUser.getActiveUser ();
 		}
 
-		public ScopedUser()
+		public ScopedUser getActiveUser ()
+		{
+			if (client != null) {
+				return client.getActiveUser ();
+			} else {
+				return null;
+			}
+		}
+
+		private ScopedUser ()
 		{
 			client = App360SDKClientFactory.getScopedUserClient (this);
 		}
 
-		public ScopedUser(string json){
-
+		public ScopedUser (string json)
+		{
+			client = App360SDKClientFactory.getScopedUserClient (this);
 			JSONNode jObj = JSON.Parse (json);
 			ScopedId = jObj ["scoped_id"];
 			Channel = jObj ["channel"];
 			SubChannel = jObj ["sub_channel"];
 		}
 
+		#region IScopedUserClient implementation
+
+		public string get (string key)
+		{
+			return client.get (key);
+		}
+
+		public void put (string key, string value)
+		{
+			client.put (key, value);
+		}
+
+		public void save ()
+		{
+			client.save ();
+		}
+
+		public Profile getFacebookProfile ()
+		{
+			return client.getFacebookProfile ();
+		}
+
+		public Profile getGoogleProfile ()
+		{
+			return client.getGoogleProfile ();
+		}
+
+		public void linkFacebook (string token)
+		{
+			if (client != null)
+				client.linkFacebook (token);
+		}
+		
+		public void linkGoogle (string token)
+		{
+			if (client != null)
+				client.linkGoogle (token);
+		}
+		
+		public void unLinkFacebook ()
+		{
+			if (client != null)
+				client.unLinkFacebook ();
+		}
+		
+		public void unLinkGoogle ()
+		{
+			if (client != null)
+				client.unLinkGoogle ();
+		}
+		#endregion
 
 
 		public string ScopedId {
 			get;
-			private set;
+			set;
 		}
 
 		public string Channel {
 			get;
-			private set;
+			set;
 		}
 
 		public string SubChannel {
 			get;
-			private set;
-		}
-
-		public void linkFacebook(string token)
-		{
-			client.linkFacebook (token);
-		}
-
-		public void linkGoogle(string token)
-		{
-			client.linkGoogle (token);
-		}
-
-		public void unlinkFacebook()
-		{
-			client.unlinkFacebook ();
-		}
-
-		public void unlinkGoogle()
-		{
-			client.unLinkGoogle ();
+			set;
 		}
 
 		#region IScopedUserListener implementation
@@ -79,7 +119,12 @@ namespace App360SDK.Api
 		public void onFailure (string error)
 		{
 			App360ErrorEventArgs args = new App360ErrorEventArgs ();
-			args.errorCode = Convert.ToInt32 (error);
+			int errorCode = -1;
+			if (int.TryParse (error, out errorCode)) {
+				args.errorCode = errorCode;
+			} else {
+				args.message = error;
+			}
 			onUpdateUserFailure (this, args);
 		}
 		#endregion

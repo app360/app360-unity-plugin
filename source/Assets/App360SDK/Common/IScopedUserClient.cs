@@ -11,10 +11,20 @@ namespace App360SDK.Common
 
 		void linkGoogle (string token);
 
-		void unlinkFacebook ();
+		void unLinkFacebook ();
 
 		void unLinkGoogle ();
 
-		ScopedUser getCurrentUser ();
+		ScopedUser getActiveUser ();
+
+		string get(string key);
+
+		void put(string key, string value);
+
+		void save();
+
+		Profile getFacebookProfile();
+
+		Profile getGoogleProfile();
 	}
 }

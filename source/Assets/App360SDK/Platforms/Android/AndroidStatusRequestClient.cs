@@ -1,3 +1,4 @@
+#if UNITY_ANDROID
 using System;
 using App360SDK.Common;
 using UnityEngine;
@@ -26,3 +27,4 @@ namespace App360SDK.Android
 		#endregion
 	}
 }
+#endif

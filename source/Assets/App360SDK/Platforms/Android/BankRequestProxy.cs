@@ -1,5 +1,4 @@
 #if UNITY_ANDROID
-
 using System;
 using UnityEngine;
 using App360SDK.Common;
@@ -29,5 +28,4 @@ namespace App360SDK.Android
 		}
 	}
 }
-
 #endif

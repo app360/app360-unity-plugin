@@ -103,6 +103,9 @@ namespace App360SDK.iOS
 		[DllImport("__Internal")]
 		internal static extern void unlinkGoogle (IntPtr scopedUserWrapper);
 
+		[DllImport("__Internal")]
+		internal static extern string getCurrentUser (IntPtr scopedUserWrapper);
+
 		#endregion
 
 		#region SMSRequest

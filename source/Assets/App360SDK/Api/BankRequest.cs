@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+
+using UnityEngine;
 using System.Collections;
 using System;
 using App360SDK.Common;
@@ -12,14 +13,15 @@ namespace App360SDK.Api
 		public event EventHandler<App360TransactionEventArgs> onBankRequestSuccess = delegate {};
 		public event EventHandler<App360ErrorEventArgs> onBankRequestFailure = delegate {};
 		
-		public BankRequest()
+		public BankRequest ()
 		{
 			client = App360SDKClientFactory.getBankRequest (this);
 		}
 		
-		public void requestTransaction(int amount, string payload)
+		public void requestTransaction (int amount, string payload)
 		{
-			client.requestTransaction (amount, payload);
+			if (client != null)
+				client.requestTransaction (amount, payload);
 		}
 		
 		#region IBankRequestListener implementation
@@ -34,7 +36,14 @@ namespace App360SDK.Api
 		public void onFailure (string error)
 		{
 			App360ErrorEventArgs args = new App360ErrorEventArgs ();
-			args.errorCode = Convert.ToInt32 (error);
+
+			int errorCode = -1;
+			if (int.TryParse (error, out errorCode)) {
+				args.errorCode = errorCode;
+			} else {
+				args.message = error;
+			}
+
 			onBankRequestFailure (this, args);
 		}
 		

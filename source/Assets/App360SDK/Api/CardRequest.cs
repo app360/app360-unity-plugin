@@ -18,9 +18,10 @@ namespace App360SDK.Api
 			client = App360SDKClientFactory.getCardRequest (this);
 		}
 		
-		public void requestTransaction(string vendor, string cardCode, string cardSerial, string payload)
+		public void requestTransaction (string vendor, string cardCode, string cardSerial, string payload)
 		{
-			client.requestTransaction (vendor, cardCode, cardSerial, payload);
+			if (client != null)
+				client.requestTransaction (vendor, cardCode, cardSerial, payload);
 		}
 		
 		#region ICardRequestListener implementation
@@ -29,7 +30,7 @@ namespace App360SDK.Api
 		{
 			App360TransactionEventArgs args = new App360TransactionEventArgs ();
 
-			args.transaction =new CardTransaction (transaction);
+			args.transaction = new CardTransaction (transaction);
 
 			onCardRequestSuccess (this, args);
 		}
@@ -37,7 +38,12 @@ namespace App360SDK.Api
 		public void onFailure (string error)
 		{
 			App360ErrorEventArgs args = new App360ErrorEventArgs ();
-			args.errorCode = Convert.ToInt32 (error);
+			int errorCode = -1;
+			if (int.TryParse (error, out errorCode)) {
+				args.errorCode = errorCode;
+			} else {
+				args.message = error;
+			}
 			onCardRequestFailure (this, args);
 		}
 		

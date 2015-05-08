@@ -8,6 +8,7 @@ namespace App360SDK.Android
 		public const string INIT_LISTENER_CLASSNAME = "com.example.app360wrapper.IInitListener";
 		public const string SESSION_CALLBACK_CLASSNAME = "com.example.app360wrapper.ISessionListener";
 		public const string SCOPED_USER_WRAPPER_CLASSNAME = "com.example.app360wrapper.IScopedUserListener";
+		public const string SAVE_LISTENER_CLASSNAME = "com.example.app360wrapper.ISaveListener";
 
 		//PAYMENT LISTENER
 		public const string BANK_LISTENER_CLASSNAME = "com.example.app360wrapper.IBankRequestListener";

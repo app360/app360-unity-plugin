@@ -10,21 +10,23 @@ namespace App360SDK.Api
 		private ISessionManagerClient client;
 
 		public event EventHandler<EventArgs> onSessionSuccess = delegate {};
-		public event EventHandler<EventArgs> onSessionFailure = delegate {};
+		public event EventHandler<App360ErrorEventArgs> onSessionFailure = delegate {};
 
-		public SessionManager()
+		public SessionManager ()
 		{
 			client = App360SDKClientFactory.getSessionManagerClient (this);
 		}
 
-		public void createSession(string scopedId)
+		public void createSession (string scopedId)
 		{
-			client.createSession (scopedId);
+			if (client != null)
+				client.createSession (scopedId);
 		}
 
-		public void createSessionWithService(string service, string token)
+		public void createSessionWithService (string service, string token)
 		{
-			client.createSessionWithService (service, token);
+			if (client != null)
+				client.createSessionWithService (service, token);
 		}
 
 		#region ISessionListener implementation
@@ -37,7 +39,12 @@ namespace App360SDK.Api
 		public void onFailure (string error)
 		{
 			App360ErrorEventArgs args = new App360ErrorEventArgs ();
-			args.errorCode = Convert.ToInt32 (error);
+			int errorCode = -1;
+			if (int.TryParse (error, out errorCode)) {
+				args.errorCode = errorCode;
+			} else {
+				args.message = error;
+			}
 			onSessionFailure (this, args);
 		}
 

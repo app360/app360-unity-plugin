@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 using App360SDK;
 using App360SDK.Api;
 
@@ -68,7 +69,20 @@ public class Main : MonoBehaviour {
 		request.onSMSRequestFailure += OnRequestSMSFailure;
 		// Pass amounts of SMS by string that values divided by semi colon
 		request.requestTransaction ("1000,5000,15000", "payload");
+
+
+		// add new userinfo	
+		scopedUser.put("Nickname","Cozo");
 		
+		scopedUser.onUpdateUserSuccess += (object senders, EventArgs e1) => {
+
+			Debug.Log("\nSaveUserSuccess");		
+		};
+		scopedUser.onUpdateUserFailure += (object sender2, App360ErrorEventArgs e2) => {
+
+			Debug.Log("\nsave Nickname:Fail");
+		};
+		scopedUser.save();
 	}
 	
 	/// <summary>
@@ -111,7 +125,7 @@ public class Main : MonoBehaviour {
 	/// <param name="e">E.</param>
 	void OnCreateSessionFailure (object sender, System.EventArgs e)
 	{
-		Debug.Log ("HandleonInitFailure. Error: " + e.ToString());
+		Debug.Log ("HandleOnCreateSessionFailure. Error: " + e.ToString());
 	}	
 	
 }

@@ -19,7 +19,9 @@ namespace App360SDK.Android
 
 		public void createSession (string scopedId)
 		{
+
 			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			Debug.Log("createSession: " +scopedId);
 			app360.CallStatic ("createSession", scopedId, new SessionCallbackProxy (_listener));
 		}
 

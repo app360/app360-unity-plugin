@@ -13,14 +13,15 @@ namespace App360SDK.Api
 		public event EventHandler<App360TransactionEventArgs> onSMSRequestSuccess = delegate {};
 		public event EventHandler<App360ErrorEventArgs> onSMSRequestFailure = delegate {};
 
-		public SMSRequest()
+		public SMSRequest ()
 		{
 			client = App360SDKClientFactory.getSMSRequest (this);
 		}
 
-		public void requestTransaction(string amount, string payload)
+		public void requestTransaction (string amount, string payload)
 		{
-			client.requestTransaction (amount, payload);
+			if (client != null)
+				client.requestTransaction (amount, payload);
 		}
 
 		#region ISMSRequestListener implementation
@@ -35,7 +36,12 @@ namespace App360SDK.Api
 		public void onFailure (string error)
 		{
 			App360ErrorEventArgs args = new App360ErrorEventArgs ();
-			args.errorCode = Convert.ToInt32 (error);
+			int errorCode = -1;
+			if (int.TryParse (error, out errorCode)) {
+				args.errorCode = errorCode;
+			} else {
+				args.message = error;
+			}
 			onSMSRequestFailure (this, args);
 		}
 

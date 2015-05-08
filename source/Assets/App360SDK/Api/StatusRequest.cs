@@ -20,7 +20,8 @@ namespace App360SDK.Api
 		
 		public void Check(string transationId)
 		{
-			client.requestTransaction (transationId);
+			if(client!=null)
+				client.requestTransaction (transationId);
 		}
 		
 

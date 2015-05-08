@@ -1,9 +1,10 @@
-﻿
+
 using UnityEngine;
 using System.Collections;
 using App360SDK.Common;
 using System;
 using System.Runtime.InteropServices;
+using App360SDK.Api;
 
 namespace App360SDK.iOS
 {
@@ -17,8 +18,6 @@ namespace App360SDK.iOS
 		internal delegate void A360UpdateUserFailure (IntPtr scopedUserClient,string error);
 		
 		#endregion
-
-
 
 		private IScopedUserListener listener;
 		private IntPtr scopedUserPtr;
@@ -44,16 +43,11 @@ namespace App360SDK.iOS
 
 		#region IScopedUserClient implementation
 
-		#region IScopedUserClient implementation
-
-		public App360SDK.Api.ScopedUser getCurrentUser ()
+		public ScopedUser getActiveUser ()
 		{
-			// TODO: pass json to ScopedUser's contructor
-			string json = "";
-			return new App360SDK.Api.ScopedUser (json);
+			string json = Externs.getCurrentUser (ScopedUserPtr);
+			return new ScopedUser (json);
 		}
-
-		#endregion
 
 		public string getScopedId ()
 		{
@@ -80,7 +74,7 @@ namespace App360SDK.iOS
 			Externs.linkGoogle (ScopedUserPtr, token);
 		}
 
-		public void unlinkFacebook ()
+		public void unLinkFacebook ()
 		{
 			Externs.unlinkFacebook (ScopedUserPtr);
 		}
@@ -88,6 +82,31 @@ namespace App360SDK.iOS
 		public void unLinkGoogle ()
 		{
 			Externs.unlinkGoogle (ScopedUserPtr);
+		}
+
+		public string get (string key)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void put (string key, string value)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void save ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public Profile getFacebookProfile ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public Profile getGoogleProfile ()
+		{
+			throw new NotImplementedException ();
 		}
 
 		#endregion

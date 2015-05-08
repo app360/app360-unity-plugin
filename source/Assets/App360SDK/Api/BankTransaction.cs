@@ -12,7 +12,7 @@ namespace App360SDK.Api
 			var jTransaction = JSON.Parse (data);
 			// base
 			base.payload = jTransaction ["payload"].Value;
-			switch (jTransaction ["status"].Value) {
+			switch (jTransaction ["status"].Value.ToLower()){
 			case "begin":
 				base.status = TransactionStatus.BEGIN;
 				break;
@@ -30,7 +30,6 @@ namespace App360SDK.Api
 			}
 
 			base.transactionId = jTransaction ["transaction_id"].Value;
-
 			// banking
 			amount = jTransaction ["amount"].Value;
 			pay_url = jTransaction ["pay_url"].Value;

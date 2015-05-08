@@ -83,6 +83,8 @@ const char * getNativeSDKVersion()
 A360UTypeSessionManagerRef createSessionManagerObject(A360UTypeSessionManagerClientRef *client)
 {
     A360USessionManager *manager = [[A360USessionManager alloc] initWithClient:client];
+    A360UObjectCache *cache = [A360UObjectCache sharedInstance];
+    [cache.references setObject:manager forKey:[manager a360u_referenceKey]];
     return (__bridge A360UTypeSessionManagerRef)manager;
 }
 
@@ -110,6 +112,8 @@ void createSessionWithService(A360UTypeApp360SDKRef manager, const char *service
 A360UTypeScopedUserRef createScopedUserObject(A360UTypeScopedUserClientRef *client)
 {
     A360UScopedUser *scopedUser = [[A360UScopedUser alloc] initWithClient:client];
+    A360UObjectCache *cache = [A360UObjectCache sharedInstance];
+    [cache.references setObject:scopedUser forKey:[scopedUser a360u_referenceKey]];
     return (__bridge A360UTypeScopedUserRef)scopedUser;
 }
 

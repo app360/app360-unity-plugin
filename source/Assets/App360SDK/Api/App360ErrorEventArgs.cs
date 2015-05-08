@@ -6,4 +6,9 @@ public class App360ErrorEventArgs : EventArgs
 {
 
 	public int errorCode { get; set; }
+
+	public string message {
+		get;
+		set;
+	}
 }

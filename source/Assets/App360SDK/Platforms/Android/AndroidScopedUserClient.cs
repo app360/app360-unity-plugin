@@ -1,5 +1,4 @@
 #if UNITY_ANDROID
-
 using System;
 using App360SDK.Common;
 using UnityEngine;
@@ -10,12 +9,60 @@ namespace App360SDK.Android
 {
 	internal class AndroidScopedUserClient : IScopedUserClient
 	{
+		#region IScopedUserClient implementation
+
+		public string get (string key)
+		{
+			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			return app360.CallStatic<string>("getScopeUserProperty", key);
+		}
+
+		public void put (string key, string value)
+		{
+			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			app360.CallStatic("putScopeUserProperty", key, value);
+		}
+
+		public void save ()
+		{
+			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			app360.CallStatic("saveScopeUser", new SaveCallBackProxy(_listener));
+		}
+
+		public Profile getFacebookProfile ()
+		{
+			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			var profileString = app360.CallStatic<string>("getFacebookProfileScopeUser");
+			return Parse (profileString);
+		}
+
+		public Profile getGoogleProfile ()
+		{
+			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
+			var profileString = app360.CallStatic<string>("getGoogleProfileScopeUser");
+			return Parse (profileString);
+		}
+
+		Profile Parse (string profileString)
+		{
+			var jProfile = JSON.Parse (profileString);
+			return new Profile {
+				accessToken = jProfile ["accessToken"],
+				fullName = jProfile ["fullName"],
+				profileImage = jProfile ["profileImage"],
+				service = jProfile ["service"],
+			};
+		}
+
+		#endregion
+
 		IScopedUserListener _listener;
 
 		public AndroidScopedUserClient (IScopedUserListener listener)
 		{
+
 			_listener = listener;
-			getCurrentUser ();
+			//getActiveUser ();
 		}
 
 		public string Channel {
@@ -60,7 +107,7 @@ namespace App360SDK.Android
 			app360.CallStatic ("LinkGoogle", token, new ScopedUserProxy (_listener));
 		}
 		
-		public void unlinkFacebook ()
+		public void unLinkFacebook ()
 		{
 			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
 			app360.CallStatic ("unLinkFacebook", new ScopedUserProxy (_listener));
@@ -72,12 +119,12 @@ namespace App360SDK.Android
 			app360.CallStatic ("unLinkGoogle", new ScopedUserProxy (_listener));
 		}
 
-		public ScopedUser getCurrentUser ()
+		public ScopedUser getActiveUser ()
 		{
 
 			AndroidJavaClass app360 = new AndroidJavaClass (Utils.APP360_WRAPPER_CLASSNAME);
 			string userInfoString = app360.CallStatic<string> ("getCurrentUser");
-
+			Debug.Log("userInfoString" + userInfoString);
 			if (string.IsNullOrEmpty (userInfoString)) {
 				return null;
 			}

@@ -16,31 +16,34 @@ namespace App360SDK.Api
 		public App360SDK()
 		{
 			client = App360SDKClientFactory.getApp360SDKClient (this);
+
 		}
 
 		public void initialize(string appId, string appSecret)
 		{
-			client.initialize (appId, appSecret);
+			if(client != null) 
+				client.initialize (appId, appSecret);
+
 		}
 
 		public string getChannel()
 		{
-			return client.getChannel ();
+			return client == null ? null : client.getChannel () ;
 		}
 
 		public string getSubChannel()
 		{
-			return client.getSubChannel ();
+			return client == null ? null : client.getSubChannel ();
 		}
 
 		public string getNativeSDKVersion()
 		{
-			return client.getNativeSDKVersion ();
+			return client == null ? null : client.getNativeSDKVersion ();
 		}
 
 		public string getUnitySDKVersion()
 		{
-			return "1.0.0";
+			return "1.0.1";
 		}
 
 		#region IInitListener implementation
