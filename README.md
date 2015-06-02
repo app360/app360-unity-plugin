@@ -115,8 +115,12 @@ sessionManager.createSession ("");
 ### With Facebook/Google access token
 
 To login with Facebook/google:
-`sessionManager.createSessionWithService("facebook", "Accesstoken");`
+```
+sessionManager.createSessionWithService("facebook", "Accesstoken");
+```
+
 ### Event callback
+
 ```
 // Raises the create session success event.
 void OnCreateSessionSuccess (object sender, System.EventArgs e)
@@ -139,6 +143,7 @@ void OnCreateSessionFailure (object sender, System.EventArgs e)
 		Debug.Log ("HandleOnCreateSessionFailure. Error: " + e.ToString ());
 }	
 ```
+
 >You can see the example for more details: /Assets/Example/Main.cs
 
 ## Payment
